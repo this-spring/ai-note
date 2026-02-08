@@ -12,8 +12,19 @@ interface ContextMenuState {
   node: FileNode | null
 }
 
+function findNodeInTree(nodes: FileNode[], id: string): FileNode | null {
+  for (const node of nodes) {
+    if (node.id === id) return node
+    if (node.children) {
+      const found = findNodeInTree(node.children, id)
+      if (found) return found
+    }
+  }
+  return null
+}
+
 function FileTree() {
-  const { tree, selectedFileId, expandedFolders, selectFile, toggleFolder, createFile, createFolder, deleteFile, renameFile, moveFile } =
+  const { tree, selectedFileId, expandedFolders, selectFile, toggleFolder, createFile, createFolder, deleteFile, renameFile, moveFile, copyToClipboard, cutToClipboard, pasteFiles } =
     useFileStore()
   const { openFile } = useEditorStore()
   const { t } = useI18n()
@@ -127,6 +138,65 @@ function FileTree() {
     [moveFile]
   )
 
+  // Determine target folder for paste based on selected node
+  const getPasteTargetDir = useCallback((): string => {
+    if (!selectedFileId) return ''
+    const node = findNodeInTree(tree, selectedFileId)
+    if (!node) return ''
+    if (node.type === 'folder') return node.path
+    // File selected: paste into its parent folder
+    const parts = node.path.split('/')
+    parts.pop()
+    return parts.join('/')
+  }, [selectedFileId, tree])
+
+  const handlePaste = useCallback(() => {
+    const targetDir = contextMenu?.node
+      ? contextMenu.node.type === 'folder'
+        ? contextMenu.node.path
+        : contextMenu.node.path.split('/').slice(0, -1).join('/')
+      : getPasteTargetDir()
+    setContextMenu(null)
+    pasteFiles(targetDir)
+  }, [contextMenu, getPasteTargetDir, pasteFiles])
+
+  const handleKeyboardPaste = useCallback(
+    (e: React.ClipboardEvent) => {
+      e.preventDefault()
+      const targetDir = getPasteTargetDir()
+      pasteFiles(targetDir)
+    },
+    [getPasteTargetDir, pasteFiles]
+  )
+
+  const handleCopy = useCallback(() => {
+    const nodePath = contextMenu?.node?.path || selectedFileId
+    if (nodePath) copyToClipboard(nodePath)
+    setContextMenu(null)
+  }, [contextMenu, selectedFileId, copyToClipboard])
+
+  const handleCut = useCallback(() => {
+    const nodePath = contextMenu?.node?.path || selectedFileId
+    if (nodePath) cutToClipboard(nodePath)
+    setContextMenu(null)
+  }, [contextMenu, selectedFileId, cutToClipboard])
+
+  // Keyboard shortcuts (Cmd/Ctrl+C, Cmd/Ctrl+X)
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const mod = e.metaKey || e.ctrlKey
+      if (!mod) return
+      if (e.key === 'c' && selectedFileId) {
+        e.preventDefault()
+        copyToClipboard(selectedFileId)
+      } else if (e.key === 'x' && selectedFileId) {
+        e.preventDefault()
+        cutToClipboard(selectedFileId)
+      }
+    },
+    [selectedFileId, copyToClipboard, cutToClipboard]
+  )
+
   // Root-level drag handlers with counter for proper enter/leave tracking
   const setRootOverlay = (show: boolean) => {
     const el = rootContainerRef.current
@@ -199,11 +269,14 @@ function FileTree() {
   const getContextMenuItems = () => {
     const items = [
       { label: t('fileTree.contextMenu.newFile'), onClick: () => handleCreate('file') },
-      { label: t('fileTree.contextMenu.newFolder'), onClick: () => handleCreate('folder') }
+      { label: t('fileTree.contextMenu.newFolder'), onClick: () => handleCreate('folder') },
+      { label: t('fileTree.contextMenu.paste'), onClick: handlePaste }
     ]
 
     if (contextMenu?.node) {
       items.push(
+        { label: t('fileTree.contextMenu.copy'), onClick: handleCopy },
+        { label: t('fileTree.contextMenu.cut'), onClick: handleCut },
         { label: t('fileTree.contextMenu.rename'), onClick: handleRenameStart },
         { label: t('fileTree.contextMenu.delete'), onClick: handleDelete }
       )
@@ -214,8 +287,11 @@ function FileTree() {
 
   return (
     <div
-      className="h-full flex flex-col"
+      className="h-full flex flex-col outline-none"
+      tabIndex={0}
       onContextMenu={handleBackgroundContextMenu}
+      onKeyDown={handleKeyDown}
+      onPaste={handleKeyboardPaste}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 text-xs font-semibold uppercase text-[var(--color-text-muted)]">

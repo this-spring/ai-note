@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState } from 'react'
 import { useVersionStore } from '../../stores/git-store'
 import { useEditorStore } from '../../stores/editor-store'
 import { useI18n } from '../../i18n'
+import { XIcon } from '../common/Icons'
 import type { TranslationKey } from '../../i18n/locales/en'
 
 interface HistoryPanelProps {
@@ -91,9 +92,10 @@ function HistoryPanel({ filePath, onClose }: HistoryPanelProps) {
           </span>
           <button
             onClick={onClose}
-            className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+            className="flex h-5 w-5 items-center justify-center rounded-md text-[var(--color-text-muted)]
+                       hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-text-primary)] transition-colors duration-150"
           >
-            ✕
+            <XIcon size={12} />
           </button>
         </div>
 
@@ -107,15 +109,16 @@ function HistoryPanel({ filePath, onClose }: HistoryPanelProps) {
               if (e.key === 'Enter') handleSaveVersion()
             }}
             placeholder={t('version.descriptionPlaceholder')}
-            className="flex-1 rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)]
+            className="flex-1 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-secondary)]
                        px-2 py-1 text-xs text-[var(--color-text-primary)] outline-none
-                       focus:border-[var(--color-accent)]"
+                       focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-light)]
+                       transition-all duration-150"
           />
           <button
             onClick={handleSaveVersion}
             disabled={!description.trim() || isSaving}
-            className="rounded bg-[var(--color-accent)] px-2.5 py-1 text-xs text-white
-                       hover:bg-[var(--color-accent-hover)] transition-colors
+            className="rounded-md bg-[var(--color-accent)] px-2.5 py-1 text-xs font-medium text-white
+                       hover:bg-[var(--color-accent-hover)] shadow-sm transition-all duration-150
                        disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
           >
             {isSaving ? t('version.saving') : t('version.save')}
@@ -134,8 +137,8 @@ function HistoryPanel({ filePath, onClose }: HistoryPanelProps) {
                 <button
                   key={v.sha}
                   onClick={() => handleVersionClick(v.sha)}
-                  className="w-full px-3 py-2 text-left transition-colors hover:bg-[var(--color-bg-tertiary)]"
-                  style={selectedSha === v.sha ? { backgroundColor: 'rgba(99, 102, 241, 0.15)' } : undefined}
+                  className={`w-full px-3 py-2 text-left transition-colors duration-100 hover:bg-[var(--color-bg-tertiary)]
+                    ${selectedSha === v.sha ? 'bg-[var(--color-accent-light)]' : ''}`}
                 >
                   <div className="truncate text-xs font-medium text-[var(--color-text-primary)]">
                     {v.message}
@@ -160,8 +163,8 @@ function HistoryPanel({ filePath, onClose }: HistoryPanelProps) {
               </span>
               <button
                 onClick={handleRestore}
-                className="rounded bg-[var(--color-accent)] px-3 py-1 text-xs text-white
-                           hover:bg-[var(--color-accent-hover)] transition-colors"
+                className="rounded-md bg-[var(--color-accent)] px-3 py-1 text-xs font-medium text-white
+                           hover:bg-[var(--color-accent-hover)] shadow-sm transition-all duration-150"
               >
                 {t('version.restore')}
               </button>

@@ -60,11 +60,11 @@ function TagPanel() {
               <button
                 key={tag.name}
                 onClick={() => handleTagClick(tag.name)}
-                className={`flex items-center justify-between rounded px-3 py-1.5 text-left text-sm
-                  transition-colors
+                className={`flex items-center justify-between rounded-md px-3 py-1.5 text-left text-sm
+                  transition-all duration-150
                   ${
                     selectedTag === tag.name
-                      ? 'bg-[var(--color-accent)] bg-opacity-15 text-[var(--color-accent)]'
+                      ? 'bg-[var(--color-accent-light)] text-[var(--color-accent)] font-medium'
                       : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
                   }`}
               >
@@ -95,9 +95,9 @@ function TagPanel() {
               <button
                 key={notePath}
                 onClick={() => handleNoteClick(notePath)}
-                className="w-full rounded px-3 py-1 text-left text-xs
+                className="w-full rounded-md px-3 py-1.5 text-left text-xs
                            text-[var(--color-text-secondary)]
-                           hover:bg-[var(--color-bg-tertiary)] transition-colors truncate"
+                           hover:bg-[var(--color-bg-tertiary)] transition-colors duration-100 truncate"
               >
                 {getFileName(notePath)}
               </button>

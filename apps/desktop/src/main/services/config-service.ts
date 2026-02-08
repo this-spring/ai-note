@@ -25,6 +25,10 @@ const DEFAULT_CONFIG: AppConfig = {
   search: {
     debounceDelay: 300
   },
+  session: {
+    openFiles: [],
+    activeFile: null
+  },
   sync: {
     enabled: false,
     lanPort: SYNC_PORT,

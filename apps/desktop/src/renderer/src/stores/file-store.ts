@@ -1,10 +1,16 @@
 import { create } from 'zustand'
 import type { FileNode } from '@shared/types/ipc'
 
+interface ClipboardState {
+  path: string
+  op: 'copy' | 'cut'
+}
+
 interface FileState {
   tree: FileNode[]
   selectedFileId: string | null
   expandedFolders: Set<string>
+  clipboard: ClipboardState | null
 
   loadFileTree: () => Promise<void>
   selectFile: (id: string) => void
@@ -14,6 +20,9 @@ interface FileState {
   deleteFile: (id: string) => Promise<void>
   renameFile: (id: string, newName: string) => Promise<void>
   moveFile: (sourcePath: string, targetFolderPath: string) => Promise<void>
+  copyToClipboard: (filePath: string) => void
+  cutToClipboard: (filePath: string) => void
+  pasteFiles: (targetDir: string) => Promise<string[]>
 }
 
 // Helper to find a node by id (path) in the tree
@@ -39,6 +48,7 @@ export const useFileStore = create<FileState>((set, get) => ({
   tree: [],
   selectedFileId: null,
   expandedFolders: new Set<string>(),
+  clipboard: null,
 
   loadFileTree: async () => {
     try {
@@ -120,6 +130,52 @@ export const useFileStore = create<FileState>((set, get) => ({
       await get().loadFileTree()
     } catch (error) {
       console.error('Failed to move file:', error)
+    }
+  },
+
+  copyToClipboard: (filePath: string) => {
+    set({ clipboard: { path: filePath, op: 'copy' } })
+  },
+
+  cutToClipboard: (filePath: string) => {
+    set({ clipboard: { path: filePath, op: 'cut' } })
+  },
+
+  pasteFiles: async (targetDir: string) => {
+    const { clipboard } = get()
+
+    // Internal clipboard takes priority
+    if (clipboard) {
+      try {
+        if (clipboard.op === 'copy') {
+          await window.electronAPI.file.copyWithin(clipboard.path, targetDir)
+        } else {
+          // Cut = move
+          const fileName = clipboard.path.split('/').pop()
+          if (fileName) {
+            const newPath = targetDir ? `${targetDir}/${fileName}` : fileName
+            if (clipboard.path !== newPath) {
+              await window.electronAPI.file.renameFile(clipboard.path, newPath)
+            }
+          }
+          set({ clipboard: null }) // Clear after cut
+        }
+        await get().loadFileTree()
+        return [clipboard.path]
+      } catch (error) {
+        console.error('Failed to paste file:', error)
+        return []
+      }
+    }
+
+    // Fallback: system clipboard
+    try {
+      const pasted = await window.electronAPI.file.pasteFromClipboard(targetDir)
+      await get().loadFileTree()
+      return pasted
+    } catch (error) {
+      console.error('Failed to paste files:', error)
+      return []
     }
   }
 }))

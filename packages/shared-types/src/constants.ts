@@ -1,4 +1,4 @@
-export const APP_NAME = 'AI-Note'
+export const APP_NAME = 'INote'
 export const CONFIG_DIR = '.ai-note'
 export const CONFIG_FILE = 'config.json'
 export const DB_FILE = 'db.sqlite'
@@ -8,7 +8,7 @@ export const DEFAULT_GITIGNORE = `.ai-note/\n.DS_Store\nThumbs.db\n`
 // Sync
 export const SYNC_PORT = 18923
 export const SYNC_CONFLICTS_DIR = 'sync-conflicts'
-export const SYNC_SERVICE_NAME = '_ai-note-sync._tcp'
+export const SYNC_SERVICE_NAME = '_inote-sync._tcp'
 export const SYNC_PAIRING_TTL = 5 * 60 * 1000 // 5 minutes
 
 // BLE Sync

@@ -79,10 +79,11 @@ function SearchPanel() {
           value={query}
           onChange={handleInputChange}
           placeholder={t('search.placeholder')}
-          className="w-full rounded border border-[var(--color-border)] bg-[var(--color-bg-primary)]
+          className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-bg-secondary)]
                      px-3 py-1.5 text-sm text-[var(--color-text-primary)] outline-none
                      placeholder:text-[var(--color-text-muted)]
-                     focus:border-[var(--color-accent)]"
+                     focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-light)]
+                     transition-all duration-150"
         />
       </div>
 
@@ -108,7 +109,7 @@ function SearchPanel() {
             {/* File name */}
             <button
               onClick={() => handleResultClick(result.filePath)}
-              className="w-full rounded px-3 py-1.5 text-left hover:bg-[var(--color-bg-tertiary)] transition-colors"
+              className="w-full rounded-md px-3 py-1.5 text-left hover:bg-[var(--color-bg-tertiary)] transition-colors duration-100"
             >
               <div className="text-xs font-medium text-[var(--color-text-primary)]">
                 {result.fileName}

@@ -5,6 +5,8 @@ import { useTagStore } from './stores/tag-store'
 import { useSettingsStore } from './stores/settings-store'
 import { useSyncStore } from './stores/sync-store'
 import { useI18n } from './i18n'
+import { useEditorStore } from './stores/editor-store'
+import { AppLogoIcon, FolderOpenIcon } from './components/common/Icons'
 import MainLayout from './components/layout/MainLayout'
 
 function App() {
@@ -26,11 +28,15 @@ function App() {
     init()
   }, [])
 
-  // Load file tree and tags when workspace changes
+  // Load file tree and tags when workspace changes, then restore session
   useEffect(() => {
     if (currentPath) {
-      loadFileTree()
-      loadTags()
+      const init = async () => {
+        await loadFileTree()
+        await loadTags()
+        await useEditorStore.getState().restoreSession()
+      }
+      init()
     }
   }, [currentPath])
 
@@ -81,17 +87,21 @@ function App() {
       <div className="flex h-full w-full flex-col bg-[var(--color-bg-primary)]">
         <div className="h-9 flex-shrink-0 titlebar-drag" />
         <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
-          <div className="text-6xl font-bold text-[var(--color-text-muted)]">
+          <div>
+            <AppLogoIcon size={72} />
+          </div>
+          <div className="text-3xl font-semibold tracking-tight text-[var(--color-text-primary)]">
             {t('app.name')}
           </div>
-          <p className="text-lg text-[var(--color-text-secondary)]">
+          <p className="text-sm text-[var(--color-text-muted)]">
             {t('app.description')}
           </p>
           <button
             onClick={openWorkspace}
             disabled={isLoading}
-            className="rounded-lg bg-[var(--color-accent)] px-6 py-3 text-white font-medium
-                       hover:bg-[var(--color-accent-hover)] transition-colors
+            className="rounded-xl bg-[var(--color-accent)] px-8 py-3.5 text-white font-medium
+                       hover:bg-[var(--color-accent-hover)] shadow-md hover:shadow-lg
+                       transition-all duration-200
                        disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? t('app.opening') : t('workspace.open')}
@@ -119,7 +129,7 @@ function RecentWorkspaces() {
       <h3 className="mb-2 text-sm font-medium text-[var(--color-text-secondary)]">
         {t('workspace.recent')}
       </h3>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1.5">
         {recentWorkspaces.map((ws) => (
           <button
             key={ws.path}
@@ -127,11 +137,14 @@ function RecentWorkspaces() {
               await window.electronAPI.workspace.open(ws.path)
               useWorkspaceStore.getState().loadCurrent()
             }}
-            className="flex items-center gap-2 rounded px-3 py-2 text-left text-sm
-                       text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)]
-                       transition-colors"
+            className="flex items-center gap-2.5 rounded-lg border border-[var(--color-border)]
+                       px-3 py-2.5 text-left text-sm text-[var(--color-text-primary)]
+                       hover:bg-[var(--color-bg-tertiary)] hover:border-[var(--color-text-muted)]
+                       transition-all duration-150"
           >
-            <span className="text-[var(--color-text-muted)]">&#128193;</span>
+            <span className="flex-shrink-0" style={{ color: '#5a9bcf' }}>
+              <FolderOpenIcon size={16} />
+            </span>
             <div className="flex flex-col overflow-hidden">
               <span className="truncate font-medium">{ws.name}</span>
               <span className="truncate text-xs text-[var(--color-text-muted)]">

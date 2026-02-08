@@ -31,6 +31,7 @@ export default function ExplorerScreen() {
   const [dialogVisible, setDialogVisible] = useState(false)
   const [createType, setCreateType] = useState<'file' | 'folder'>('file')
   const [inputName, setInputName] = useState('')
+  const [createInFolder, setCreateInFolder] = useState('')
 
   useEffect(() => {
     loadFileTree()
@@ -66,23 +67,37 @@ export default function ExplorerScreen() {
   }
 
   const handleLongPress = (node: FileNode) => {
-    Alert.alert(node.name, undefined, [
-      {
-        text: '删除',
-        style: 'destructive',
+    const actions: Array<{ text: string; style?: 'destructive' | 'cancel'; onPress?: () => void }> = []
+
+    if (node.type === 'folder') {
+      actions.push({
+        text: '在此文件夹新建',
         onPress: () => {
-          Alert.alert('确认删除', `确定删除「${node.name}」？`, [
-            { text: '取消', style: 'cancel' },
-            {
-              text: '删除',
-              style: 'destructive',
-              onPress: () => deleteFile(node.path),
-            },
-          ])
+          setCreateInFolder(node.path)
+          setCreateType('file')
+          setInputName('')
+          setDialogVisible(true)
         },
+      })
+    }
+
+    actions.push({
+      text: '删除',
+      style: 'destructive',
+      onPress: () => {
+        Alert.alert('确认删除', `确定删除「${node.name}」？`, [
+          { text: '取消', style: 'cancel' },
+          {
+            text: '删除',
+            style: 'destructive',
+            onPress: () => deleteFile(node.path),
+          },
+        ])
       },
-      { text: '取消', style: 'cancel' },
-    ])
+    })
+
+    actions.push({ text: '取消', style: 'cancel' })
+    Alert.alert(node.name, undefined, actions)
   }
 
   const handleCreate = async () => {
@@ -91,18 +106,20 @@ export default function ExplorerScreen() {
 
     try {
       if (createType === 'file') {
-        const path = await createFile('', name)
+        const path = await createFile(createInFolder, name)
         setDialogVisible(false)
         setInputName('')
+        setCreateInFolder('')
         // Open the new file in editor
         router.push({
           pathname: '/editor/[path]',
           params: { path },
         })
       } else {
-        await createFolder('', name)
+        await createFolder(createInFolder, name)
         setDialogVisible(false)
         setInputName('')
+        setCreateInFolder('')
       }
     } catch (e: any) {
       Alert.alert('创建失败', e.message)
@@ -151,6 +168,7 @@ export default function ExplorerScreen() {
         icon="plus"
         style={styles.fab}
         onPress={() => {
+          setCreateInFolder('')
           setCreateType('file')
           setInputName('')
           setDialogVisible(true)
@@ -159,7 +177,7 @@ export default function ExplorerScreen() {
 
       <Portal>
         <Dialog visible={dialogVisible} onDismiss={() => setDialogVisible(false)}>
-          <Dialog.Title>新建</Dialog.Title>
+          <Dialog.Title>{createInFolder ? `在 ${createInFolder} 中新建` : '新建'}</Dialog.Title>
           <Dialog.Content>
             <RadioButton.Group
               value={createType}

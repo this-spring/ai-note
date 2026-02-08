@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from 'react'
+import { XIcon } from './Icons'
 
 interface ModalProps {
   isOpen: boolean
@@ -33,12 +34,13 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
       onClick={onClose}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-50" />
+      <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" />
 
       {/* Modal content */}
       <div
-        className="relative z-10 w-full max-w-md rounded-lg bg-[var(--color-bg-primary)]
-                   border border-[var(--color-border)] shadow-xl"
+        className="relative z-10 w-full max-w-md rounded-xl bg-[var(--color-bg-primary)]
+                   border border-[var(--color-border)]"
+        style={{ boxShadow: 'var(--shadow-float)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -48,11 +50,11 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
           </h2>
           <button
             onClick={onClose}
-            className="flex h-6 w-6 items-center justify-center rounded text-[var(--color-text-muted)]
+            className="flex h-6 w-6 items-center justify-center rounded-md text-[var(--color-text-muted)]
                        hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-text-primary)]
-                       transition-colors"
+                       transition-colors duration-150"
           >
-            &times;
+            <XIcon size={14} />
           </button>
         </div>
 

@@ -1,7 +1,7 @@
 const en = {
   // App
-  'app.name': 'AI-Note',
-  'app.description': 'A local-first Markdown note-taking app',
+  'app.name': 'INote',
+  'app.description': 'A local-first note-taking & file management app',
   'app.opening': 'Opening...',
 
   // Workspace
@@ -28,7 +28,10 @@ const en = {
   'fileTree.contextMenu.newFile': 'New File',
   'fileTree.contextMenu.newFolder': 'New Folder',
   'fileTree.contextMenu.rename': 'Rename',
+  'fileTree.contextMenu.copy': 'Copy',
+  'fileTree.contextMenu.cut': 'Cut',
   'fileTree.contextMenu.delete': 'Delete',
+  'fileTree.contextMenu.paste': 'Paste',
   'fileTree.deleteConfirm': 'Are you sure you want to delete "{name}"?',
 
   // Editor

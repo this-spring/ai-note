@@ -24,6 +24,15 @@ const electronAPI: ElectronAPI = {
     getFileTree() {
       return ipcRenderer.invoke('file:get-tree')
     },
+    openExternal(filePath: string) {
+      return ipcRenderer.invoke('file:open-external', filePath)
+    },
+    pasteFromClipboard(targetDir: string) {
+      return ipcRenderer.invoke('file:paste-from-clipboard', targetDir)
+    },
+    copyWithin(sourcePath: string, targetDir: string) {
+      return ipcRenderer.invoke('file:copy-within', sourcePath, targetDir)
+    },
     onFileChange(callback) {
       const handler = (_event: Electron.IpcRendererEvent, data: any) => {
         callback(data)

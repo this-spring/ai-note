@@ -1,5 +1,6 @@
 import { useEditorStore } from '../../stores/editor-store'
 import { useI18n, Locale } from '../../i18n'
+import { GlobeIcon } from '../common/Icons'
 import SyncStatusIndicator from '../sync/SyncStatusIndicator'
 
 function StatusBar() {
@@ -30,7 +31,7 @@ function StatusBar() {
     <div
       className="flex h-6 flex-shrink-0 items-center justify-between border-t
                     border-[var(--color-border)] bg-[var(--color-bg-secondary)]
-                    px-3 text-xs text-[var(--color-text-muted)]"
+                    px-4 text-xs text-[var(--color-text-muted)]"
     >
       {/* Left side */}
       <div className="flex items-center gap-4">
@@ -38,7 +39,7 @@ function StatusBar() {
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {activeTab && (
           <>
             {/* Save status */}
@@ -53,17 +54,18 @@ function StatusBar() {
             <span>{lineCount} {t('status.lines')}</span>
 
             {/* Editor mode */}
-            <span className="uppercase">MD</span>
+            <span className="uppercase font-medium">MD</span>
           </>
         )}
 
         {/* Language toggle */}
         <button
           onClick={toggleLocale}
-          className="hover:text-[var(--color-text-primary)] transition-colors"
+          className="flex items-center gap-1 hover:text-[var(--color-text-primary)] transition-colors"
           title={t('settings.language')}
         >
-          {locale === 'en' ? '中文' : 'EN'}
+          <GlobeIcon size={12} />
+          <span>{locale === 'en' ? '中文' : 'EN'}</span>
         </button>
       </div>
     </div>

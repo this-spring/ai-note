@@ -64,12 +64,12 @@ function PairingModal({ onClose }: PairingModalProps) {
           <img
             src={qrDataUrl}
             alt="QR Code"
-            className="rounded border border-[var(--color-border)]"
+            className="rounded-lg border border-[var(--color-border)] shadow-sm"
             width={200}
             height={200}
           />
         ) : (
-          <div className="flex h-[200px] w-[200px] items-center justify-center rounded border border-[var(--color-border)] bg-[var(--color-bg-tertiary)]">
+          <div className="flex h-[200px] w-[200px] items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-tertiary)]">
             <span className="text-sm text-[var(--color-text-muted)]">
               {t('sync.generatingQR')}
             </span>
@@ -97,7 +97,8 @@ function PairingModal({ onClose }: PairingModalProps) {
         {remaining === 0 && (
           <button
             onClick={() => generatePairing()}
-            className="rounded bg-[var(--color-accent)] px-4 py-1.5 text-xs text-white hover:opacity-90"
+            className="rounded-md bg-[var(--color-accent)] px-4 py-1.5 text-xs font-medium text-white
+                       hover:bg-[var(--color-accent-hover)] shadow-sm transition-all duration-150"
           >
             {t('sync.refreshPIN')}
           </button>

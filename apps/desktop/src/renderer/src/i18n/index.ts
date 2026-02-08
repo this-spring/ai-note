@@ -13,7 +13,7 @@ interface I18nState {
 }
 
 function detectLocale(): Locale {
-  const saved = localStorage.getItem('ai-note-locale')
+  const saved = localStorage.getItem('inote-locale')
   if (saved === 'en' || saved === 'zh') return saved
   const lang = navigator.language
   return lang.startsWith('zh') ? 'zh' : 'en'
@@ -23,7 +23,7 @@ export const useI18n = create<I18nState>((set, get) => ({
   locale: detectLocale(),
 
   setLocale: (locale: Locale) => {
-    localStorage.setItem('ai-note-locale', locale)
+    localStorage.setItem('inote-locale', locale)
     set({ locale })
   },
 

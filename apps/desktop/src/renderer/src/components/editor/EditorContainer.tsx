@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 import { useEditorStore } from '../../stores/editor-store'
 import { useI18n } from '../../i18n'
+import { HistoryIcon, EyeIcon, EyeOffIcon, PenLineIcon } from '../common/Icons'
 import TabBar from './TabBar'
 import SourceEditor from './SourceEditor'
 import MarkdownPreview from './MarkdownPreview'
@@ -103,13 +104,13 @@ function EditorContainer() {
   if (!activeTab) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center bg-[var(--color-bg-primary)]">
-        <div className="text-4xl text-[var(--color-text-muted)]">
-          {'\u{1F4DD}'}
+        <div className="text-[var(--color-text-muted)] opacity-30">
+          <PenLineIcon size={48} />
         </div>
         <p className="mt-4 text-sm text-[var(--color-text-muted)]">
           {t('editor.emptyTitle')}
         </p>
-        <p className="mt-1 text-xs text-[var(--color-text-muted)]">
+        <p className="mt-1 text-xs text-[var(--color-text-muted)] opacity-70">
           {t('editor.emptySubtitle')}
         </p>
       </div>
@@ -122,25 +123,27 @@ function EditorContainer() {
       <TabBar />
 
       {/* Toolbar */}
-      <div className="flex items-center justify-end border-b border-[var(--color-border)] px-3 py-1 gap-2">
+      <div className="flex items-center justify-end border-b border-[var(--color-border)] px-3 py-1 gap-1">
         <button
           onClick={() => setShowHistory(!showHistory)}
-          className={`rounded px-2 py-1 text-xs font-medium transition-colors
+          className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all duration-150
             ${showHistory
-              ? 'text-[var(--color-accent)] bg-[var(--color-bg-tertiary)]'
+              ? 'text-[var(--color-accent)] bg-[var(--color-accent-light)]'
               : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-text-primary)]'
             }`}
           title={t('editor.toggleHistory')}
         >
+          <HistoryIcon size={14} />
           {t('editor.history')}
         </button>
         <button
           onClick={togglePreview}
-          className="rounded px-2 py-1 text-xs font-medium text-[var(--color-text-secondary)]
+          className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium text-[var(--color-text-secondary)]
                      hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-text-primary)]
-                     transition-colors"
+                     transition-all duration-150"
           title={t('editor.togglePreview')}
         >
+          {showPreview ? <EyeOffIcon size={14} /> : <EyeIcon size={14} />}
           {showPreview ? t('editor.hidePreview') : t('editor.showPreview')}
         </button>
       </div>

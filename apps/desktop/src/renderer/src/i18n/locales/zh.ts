@@ -1,7 +1,7 @@
 const zh: Record<string, string> = {
   // App
-  'app.name': 'AI-Note',
-  'app.description': '本地优先的 Markdown 笔记应用',
+  'app.name': 'INote',
+  'app.description': '本地优先的笔记与文件管理应用',
   'app.opening': '正在打开...',
 
   // Workspace
@@ -28,7 +28,10 @@ const zh: Record<string, string> = {
   'fileTree.contextMenu.newFile': '新建文件',
   'fileTree.contextMenu.newFolder': '新建文件夹',
   'fileTree.contextMenu.rename': '重命名',
+  'fileTree.contextMenu.copy': '复制',
+  'fileTree.contextMenu.cut': '剪切',
   'fileTree.contextMenu.delete': '删除',
+  'fileTree.contextMenu.paste': '粘贴',
   'fileTree.deleteConfirm': '确定要删除 "{name}" 吗？',
 
   // Editor

@@ -11,6 +11,9 @@
     "build:website": "pnpm --filter @ai-note/website build",
     "dev:mobile": "pnpm --filter @ai-note/mobile start",
     "android": "pnpm --filter @ai-note/mobile android",
+    "dist": "pnpm --filter @ai-note/desktop dist",
+    "dist:mac": "pnpm --filter @ai-note/desktop dist:mac",
+    "dist:win": "pnpm --filter @ai-note/desktop dist:win",
     "lint": "pnpm -r lint",
     "format": "pnpm -r format",
     "test": "pnpm -r test"

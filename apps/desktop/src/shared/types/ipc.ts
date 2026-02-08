@@ -57,6 +57,9 @@ export interface ElectronAPI {
     createFile(dirPath: string, fileName: string): Promise<string>
     createFolder(parentPath: string, folderName: string): Promise<string>
     getFileTree(): Promise<FileNode[]>
+    openExternal(filePath: string): Promise<string>
+    pasteFromClipboard(targetDir: string): Promise<string[]>
+    copyWithin(sourcePath: string, targetDir: string): Promise<string>
     onFileChange(callback: (event: FileChangeEvent) => void): () => void
   }
   git: {

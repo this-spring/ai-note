@@ -20,5 +20,9 @@ export interface AppConfig {
     sidebarWidth: number
   }
   search: { debounceDelay: number }
+  session: {
+    openFiles: string[]
+    activeFile: string | null
+  }
   sync: SyncConfig
 }

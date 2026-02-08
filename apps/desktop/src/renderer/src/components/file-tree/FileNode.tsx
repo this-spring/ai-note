@@ -1,5 +1,10 @@
-import { useRef, DragEvent } from 'react'
+import { useRef, DragEvent, ReactNode } from 'react'
 import type { FileNode } from '@shared/types/ipc'
+import {
+  FolderIcon, FolderOpenIcon, MarkdownIcon, FileJsonIcon,
+  CodeIcon, PaletteIcon, ImageIcon, FileTextIcon,
+  ChevronRightIcon, ChevronDownIcon
+} from '../common/Icons'
 
 interface FileNodeProps {
   node: FileNode
@@ -15,35 +20,37 @@ interface FileNodeProps {
   onDrop: (sourcePath: string, targetFolderPath: string) => void
 }
 
-// Simple icon characters for file types
-function getFileIcon(node: FileNode, isExpanded: boolean): string {
+// SVG icon for file types
+function getFileIcon(node: FileNode, isExpanded: boolean): ReactNode {
   if (node.type === 'folder') {
-    return isExpanded ? '\u{1F4C2}' : '\u{1F4C1}'
+    return isExpanded
+      ? <FolderOpenIcon size={15} style={{ color: '#5a9bcf' }} />
+      : <FolderIcon size={15} style={{ color: '#5a9bcf' }} />
   }
 
   const ext = node.name.split('.').pop()?.toLowerCase()
   switch (ext) {
     case 'md':
     case 'markdown':
-      return '\u{1F4DD}'
+      return <MarkdownIcon size={15} className="text-[var(--color-accent)]" />
     case 'json':
-      return '\u{1F4CB}'
+      return <FileJsonIcon size={15} style={{ color: '#dba04a' }} />
     case 'ts':
     case 'tsx':
     case 'js':
     case 'jsx':
-      return '\u{1F4C4}'
+      return <CodeIcon size={15} style={{ color: '#4ec9b0' }} />
     case 'css':
     case 'scss':
-      return '\u{1F3A8}'
+      return <PaletteIcon size={15} style={{ color: '#b07cd8' }} />
     case 'png':
     case 'jpg':
     case 'jpeg':
     case 'gif':
     case 'svg':
-      return '\u{1F5BC}'
+      return <ImageIcon size={15} style={{ color: '#56b886' }} />
     default:
-      return '\u{1F4C4}'
+      return <FileTextIcon size={15} className="text-[var(--color-text-muted)]" />
   }
 }
 
@@ -62,7 +69,6 @@ function FileNodeComponent({
 }: FileNodeProps) {
   const indent = depth * 16
   const icon = getFileIcon(node, isExpanded)
-  // Use a counter to handle nested dragEnter/dragLeave correctly
   const dragCounterRef = useRef(0)
   const nodeRef = useRef<HTMLDivElement>(null)
 
@@ -77,8 +83,8 @@ function FileNodeComponent({
     e.stopPropagation()
     dragCounterRef.current++
     if (dragCounterRef.current === 1 && nodeRef.current) {
-      nodeRef.current.style.backgroundColor = 'rgba(99, 102, 241, 0.12)'
-      nodeRef.current.style.outline = '1px dashed rgba(99, 102, 241, 0.5)'
+      nodeRef.current.style.backgroundColor = 'var(--color-accent-light)'
+      nodeRef.current.style.outline = '1px dashed var(--color-accent)'
       nodeRef.current.style.outlineOffset = '-1px'
     }
   }
@@ -114,7 +120,6 @@ function FileNodeComponent({
     if (node.type !== 'folder') return
     const sourcePath = e.dataTransfer.getData('text/plain')
     if (!sourcePath || sourcePath === node.path) return
-    // Prevent dropping a folder into itself or its children
     if (node.path.startsWith(sourcePath + '/')) return
     onDrop(sourcePath, node.path)
   }
@@ -131,17 +136,14 @@ function FileNodeComponent({
   return (
     <div
       ref={nodeRef}
-      className={`flex cursor-pointer items-center gap-1 rounded px-2 py-0.5 text-sm
-        transition-colors select-none
+      className={`flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-[3px] text-sm
+        transition-colors duration-100 select-none
         ${
           isSelected
-            ? 'text-[var(--color-text-primary)]'
+            ? 'bg-[var(--color-accent-light)] text-[var(--color-text-primary)]'
             : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-tertiary)]'
         }`}
-      style={{
-        paddingLeft: `${indent + 8}px`,
-        ...(isSelected ? { backgroundColor: 'rgba(99, 102, 241, 0.15)' } : {})
-      }}
+      style={{ paddingLeft: `${indent + 8}px` }}
       onClick={onClick}
       onContextMenu={onContextMenu}
       draggable={!isRenaming}
@@ -154,13 +156,13 @@ function FileNodeComponent({
     >
       {/* Folder expand indicator */}
       {node.type === 'folder' && (
-        <span className="w-3 text-center text-xs text-[var(--color-text-muted)]">
-          {isExpanded ? '\u25BE' : '\u25B8'}
+        <span className="flex w-3 items-center justify-center text-[var(--color-text-muted)]">
+          {isExpanded ? <ChevronDownIcon size={12} /> : <ChevronRightIcon size={12} />}
         </span>
       )}
 
       {/* Icon */}
-      <span className="flex-shrink-0 text-xs">{icon}</span>
+      <span className="flex flex-shrink-0 items-center">{icon}</span>
 
       {/* Name or rename input */}
       {isRenaming ? (
@@ -175,7 +177,7 @@ function FileNodeComponent({
           }}
           onBlur={onRenameSubmit}
           onClick={(e) => e.stopPropagation()}
-          className="flex-1 rounded border border-[var(--color-accent)] bg-[var(--color-bg-primary)]
+          className="flex-1 rounded-md border border-[var(--color-accent)] bg-[var(--color-bg-primary)]
                      px-1 py-0 text-xs text-[var(--color-text-primary)] outline-none"
         />
       ) : (

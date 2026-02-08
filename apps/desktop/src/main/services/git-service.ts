@@ -87,8 +87,8 @@ export class GitService {
       dir: this.workspacePath,
       message,
       author: {
-        name: 'AI-Note',
-        email: 'ai-note@local'
+        name: 'INote',
+        email: 'inote@local'
       }
     })
 
@@ -189,8 +189,8 @@ export class GitService {
       dir: this.workspacePath,
       message: description,
       author: {
-        name: 'AI-Note',
-        email: 'ai-note@local'
+        name: 'INote',
+        email: 'inote@local'
       }
     })
 

@@ -1,7 +1,7 @@
-# AI-Note Desktop
+# INote Desktop
 
 ## 项目简介
-AI-Note 桌面应用，本地优先的 Markdown 笔记工具，内置 Git 版本控制。
+INote 桌面应用，本地优先的笔记与文件管理工具，内置 Git 版本控制。
 
 ## 技术栈
 - Electron 33 + electron-vite

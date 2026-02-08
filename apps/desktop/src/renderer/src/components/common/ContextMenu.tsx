@@ -78,10 +78,10 @@ function ContextMenu({ x, y, items, onClose }: ContextMenuProps) {
   return (
     <div
       ref={menuRef}
-      className="context-menu-enter fixed z-50 min-w-[160px] rounded-md border
+      className="context-menu-enter fixed z-50 min-w-[160px] rounded-lg border
                  border-[var(--color-border)] bg-[var(--color-bg-primary)] py-1
-                 shadow-lg"
-      style={{ left: position.left, top: position.top }}
+                 backdrop-blur-sm"
+      style={{ left: position.left, top: position.top, boxShadow: 'var(--shadow-float)' }}
     >
       {items.map((item, index) => (
         <button
@@ -93,7 +93,7 @@ function ContextMenu({ x, y, items, onClose }: ContextMenuProps) {
           className="flex w-full items-center px-3 py-1.5 text-left text-sm
                      text-[var(--color-text-secondary)]
                      hover:bg-[var(--color-accent)] hover:text-white
-                     transition-colors"
+                     transition-colors duration-100 first:rounded-t last:rounded-b"
         >
           {item.label}
         </button>

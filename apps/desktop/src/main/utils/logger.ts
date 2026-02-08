@@ -1,8 +1,8 @@
 export const logger = {
-  info: (...args: any[]) => console.log('[AI-Note]', ...args),
-  error: (...args: any[]) => console.error('[AI-Note ERROR]', ...args),
-  warn: (...args: any[]) => console.warn('[AI-Note WARN]', ...args),
+  info: (...args: any[]) => console.log('[INote]', ...args),
+  error: (...args: any[]) => console.error('[INote ERROR]', ...args),
+  warn: (...args: any[]) => console.warn('[INote WARN]', ...args),
   debug: (...args: any[]) => {
-    if (process.env.NODE_ENV === 'development') console.log('[AI-Note DEBUG]', ...args)
+    if (process.env.NODE_ENV === 'development') console.log('[INote DEBUG]', ...args)
   }
 }

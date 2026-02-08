@@ -1,31 +1,36 @@
 import { useSyncStore } from '../../stores/sync-store'
 import { useI18n } from '../../i18n'
+import { WifiIcon, RefreshCwIcon } from '../common/Icons'
 
 function SyncStatusIndicator() {
   const { status, devices } = useSyncStore()
   const { t } = useI18n()
 
-  const statusConfig: Record<string, { icon: string; color: string }> = {
-    idle: { icon: '\u2B24', color: 'var(--color-text-muted)' },
-    discovering: { icon: '\u2B24', color: 'var(--color-warning)' },
-    connecting: { icon: '\u2B24', color: 'var(--color-warning)' },
-    syncing: { icon: '\u2B24', color: 'var(--color-accent)' },
-    error: { icon: '\u2B24', color: 'var(--color-danger)' }
-  }
-
-  const { icon, color } = statusConfig[status] || statusConfig.idle
   const connectedCount = devices.filter((d) => d.isConnected).length
 
+  const getStatusColor = () => {
+    switch (status) {
+      case 'syncing': return 'var(--color-accent)'
+      case 'discovering':
+      case 'connecting': return 'var(--color-warning)'
+      case 'error': return 'var(--color-danger)'
+      default: return 'var(--color-text-muted)'
+    }
+  }
+
+  const isSyncing = status === 'syncing'
   const label = connectedCount > 0
     ? `${t('sync.status.' + status)} (${connectedCount})`
     : t('sync.status.' + status)
 
   return (
     <span
-      className="flex items-center gap-1 text-xs"
+      className="flex items-center gap-1.5 text-xs"
       title={label}
     >
-      <span style={{ color, fontSize: '6px' }}>{icon}</span>
+      <span style={{ color: getStatusColor() }} className={isSyncing ? 'animate-pulse-dot' : ''}>
+        {connectedCount > 0 ? <WifiIcon size={12} /> : <RefreshCwIcon size={11} />}
+      </span>
       <span className="text-[var(--color-text-muted)]">
         {t('sync.title')}
       </span>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSyncStore } from '../../stores/sync-store'
 import { useI18n } from '../../i18n'
+import { SmartphoneIcon, RefreshCwIcon } from '../common/Icons'
 import PairingModal from './PairingModal'
 
 function SyncPanel() {
@@ -59,10 +60,10 @@ function SyncPanel() {
         </span>
         <button
           onClick={handleToggleSync}
-          className={`rounded px-2 py-0.5 text-xs transition-colors ${
+          className={`rounded-md px-2.5 py-0.5 text-xs font-medium transition-all duration-150 ${
             isEnabled
-              ? 'bg-[var(--color-accent)] text-white'
-              : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)]'
+              ? 'bg-[var(--color-accent)] text-white shadow-sm hover:shadow-md'
+              : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] hover:bg-[var(--color-border)]'
           }`}
         >
           {isEnabled ? t('sync.on') : t('sync.off')}
@@ -97,12 +98,14 @@ function SyncPanel() {
               {connectedDevices.map((device) => (
                 <div
                   key={device.id}
-                  className="flex items-center justify-between rounded bg-[var(--color-bg-tertiary)] px-2 py-1"
+                  className="flex items-center justify-between rounded-md border border-[var(--color-border)]
+                             bg-[var(--color-bg-primary)] px-2.5 py-1.5"
                 >
-                  <span className="text-xs text-[var(--color-text-primary)]">
+                  <span className="flex items-center gap-1.5 text-xs text-[var(--color-text-primary)]">
+                    <SmartphoneIcon size={12} className="text-[var(--color-text-muted)]" />
                     {device.name}
                   </span>
-                  <span className="text-xs text-[var(--color-success)]">
+                  <span className="text-xs font-medium text-[var(--color-success)]">
                     {t('sync.connected')}
                   </span>
                 </div>
@@ -119,14 +122,16 @@ function SyncPanel() {
           {pairedDevices.map((device) => (
             <div
               key={device.deviceId}
-              className="flex items-center justify-between rounded bg-[var(--color-bg-tertiary)] px-2 py-1 mb-1"
+              className="flex items-center justify-between rounded-md border border-[var(--color-border)]
+                         bg-[var(--color-bg-primary)] px-2.5 py-1.5 mb-1"
             >
-              <span className="text-xs text-[var(--color-text-primary)]">
+              <span className="flex items-center gap-1.5 text-xs text-[var(--color-text-primary)]">
+                <SmartphoneIcon size={12} className="text-[var(--color-text-muted)]" />
                 {device.deviceName}
               </span>
               <button
                 onClick={() => revokeDevice(device.deviceId)}
-                className="text-xs text-[var(--color-danger)] hover:underline"
+                className="text-xs text-[var(--color-danger)] hover:underline transition-colors"
               >
                 {t('sync.revoke')}
               </button>
@@ -143,7 +148,7 @@ function SyncPanel() {
             {conflicts.map((c) => (
               <div
                 key={c.path}
-                className="rounded border border-[var(--color-danger)] bg-[var(--color-bg-tertiary)] px-2 py-1 mb-1"
+                className="rounded-md border border-[var(--color-danger)] bg-[var(--color-bg-tertiary)] px-2.5 py-1.5 mb-1"
               >
                 <div className="text-xs text-[var(--color-text-primary)]">{c.path}</div>
               </div>
@@ -156,18 +161,20 @@ function SyncPanel() {
           <button
             onClick={handlePair}
             disabled={!isEnabled}
-            className="w-full rounded bg-[var(--color-accent)] px-3 py-1.5 text-xs text-white
-                       disabled:opacity-50 hover:opacity-90 transition-opacity"
+            className="w-full rounded-md bg-[var(--color-accent)] px-3 py-2 text-xs font-medium text-white
+                       disabled:opacity-50 hover:bg-[var(--color-accent-hover)] shadow-sm hover:shadow-md
+                       transition-all duration-150"
           >
             {t('sync.pairDevice')}
           </button>
           <button
             onClick={() => triggerSync()}
             disabled={!isEnabled || connectedDevices.length === 0}
-            className="w-full rounded border border-[var(--color-border)] px-3 py-1.5 text-xs
-                       text-[var(--color-text-primary)] disabled:opacity-50
-                       hover:bg-[var(--color-bg-tertiary)] transition-colors"
+            className="flex w-full items-center justify-center gap-1.5 rounded-md border border-[var(--color-border)]
+                       px-3 py-2 text-xs font-medium text-[var(--color-text-primary)] disabled:opacity-50
+                       hover:bg-[var(--color-bg-tertiary)] transition-all duration-150"
           >
+            <RefreshCwIcon size={12} />
             {t('sync.syncNow')}
           </button>
         </div>

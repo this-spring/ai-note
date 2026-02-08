@@ -82,10 +82,14 @@ export class FileService {
     const fullPath = path.join(dir, fileName)
     this.validatePath(fullPath)
 
-    // Create file with front matter template
-    const title = path.basename(fileName, path.extname(fileName))
-    const now = new Date().toISOString()
-    const frontMatter = `---
+    const ext = path.extname(fileName).toLowerCase()
+    const isMd = ext === '.md' || ext === '.markdown'
+
+    if (isMd) {
+      // Create markdown file with front matter template
+      const title = path.basename(fileName, ext)
+      const now = new Date().toISOString()
+      const frontMatter = `---
 title: "${title}"
 created: ${now}
 updated: ${now}
@@ -93,7 +97,11 @@ tags: []
 ---
 
 `
-    await fs.writeFile(fullPath, frontMatter, 'utf-8')
+      await fs.writeFile(fullPath, frontMatter, 'utf-8')
+    } else {
+      // Create empty file for non-markdown formats
+      await fs.writeFile(fullPath, '', 'utf-8')
+    }
 
     return path.relative(this.workspacePath, fullPath)
   }
@@ -169,7 +177,7 @@ tags: []
           path: entryRelativePath,
           children
         })
-      } else if (entry.name.endsWith('.md')) {
+      } else {
         nodes.push({
           id: entryRelativePath,
           name: entry.name,
