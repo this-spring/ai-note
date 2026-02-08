@@ -1,0 +1,29 @@
+{
+  "name": "ai-note-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-Note monorepo - local-first Markdown note-taking app",
+  "scripts": {
+    "dev": "pnpm --filter @ai-note/desktop dev",
+    "build": "pnpm --filter @ai-note/desktop build",
+    "preview": "pnpm --filter @ai-note/desktop preview",
+    "dev:website": "pnpm --filter @ai-note/website dev",
+    "build:website": "pnpm --filter @ai-note/website build",
+    "dev:mobile": "pnpm --filter @ai-note/mobile start",
+    "android": "pnpm --filter @ai-note/mobile android",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format",
+    "test": "pnpm -r test"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@abandonware/bleno",
+      "better-sqlite3",
+      "electron",
+      "bufferutil",
+      "esbuild",
+      "utf-8-validate",
+      "xpc-connect"
+    ]
+  }
+}

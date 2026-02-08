@@ -1,0 +1,9 @@
+node_modules/
+out/
+dist/
+.next/
+.ai-note/
+.DS_Store
+Thumbs.db
+*.log
+pnpm-debug.log*

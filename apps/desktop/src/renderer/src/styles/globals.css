@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom theme variables */
+:root {
+  --sidebar-width: 260px;
+  --statusbar-height: 24px;
+  --tabbar-height: 36px;
+  --toolbar-height: 40px;
+
+  /* Light theme colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
+  --color-bg-tertiary: #e9ecef;
+  --color-text-primary: #212529;
+  --color-text-secondary: #6c757d;
+  --color-text-muted: #adb5bd;
+  --color-border: #dee2e6;
+  --color-accent: #4f46e5;
+  --color-accent-hover: #4338ca;
+  --color-danger: #dc3545;
+  --color-success: #28a745;
+}
+
+.dark {
+  --color-bg-primary: #1e1e1e;
+  --color-bg-secondary: #1e1e2e;
+  --color-bg-tertiary: #2d2d3d;
+  --color-text-primary: #e4e4e7;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-border: #3f3f46;
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+}
+
+/* Base styles */
+@layer base {
+  body {
+    @apply bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] font-sans m-0 p-0 h-screen w-screen select-none;
+  }
+
+  #root {
+    @apply h-full w-full;
+  }
+}
+
+/* Editor styles */
+@layer components {
+  .editor-content {
+    @apply font-mono text-sm leading-relaxed;
+  }
+
+  .editor-content h1 {
+    @apply text-2xl font-bold mb-4 mt-6;
+  }
+
+  .editor-content h2 {
+    @apply text-xl font-bold mb-3 mt-5;
+  }
+
+  .editor-content h3 {
+    @apply text-lg font-semibold mb-2 mt-4;
+  }
+
+  .editor-content p {
+    @apply mb-3;
+  }
+
+  .editor-content code {
+    @apply bg-[var(--color-bg-tertiary)] px-1.5 py-0.5 rounded text-sm;
+  }
+
+  .editor-content pre {
+    @apply bg-[var(--color-bg-tertiary)] p-4 rounded-lg overflow-x-auto mb-4;
+  }
+
+  .editor-content pre code {
+    @apply bg-transparent p-0;
+  }
+
+  .editor-content blockquote {
+    @apply border-l-4 border-[var(--color-accent)] pl-4 italic text-[var(--color-text-secondary)] my-4;
+  }
+
+  .editor-content ul,
+  .editor-content ol {
+    @apply pl-6 mb-3;
+  }
+
+  .editor-content li {
+    @apply mb-1;
+  }
+
+  .editor-content a {
+    @apply text-[var(--color-accent)] underline;
+  }
+
+  .editor-content hr {
+    @apply border-[var(--color-border)] my-6;
+  }
+
+  .editor-content img {
+    @apply max-w-full rounded;
+  }
+
+  .editor-content table {
+    @apply w-full border-collapse mb-4;
+  }
+
+  .editor-content th,
+  .editor-content td {
+    @apply border border-[var(--color-border)] px-3 py-2 text-left;
+  }
+
+  .editor-content th {
+    @apply bg-[var(--color-bg-tertiary)] font-semibold;
+  }
+}
+
+/* macOS title bar drag region */
+.titlebar-drag {
+  -webkit-app-region: drag;
+}
+
+/* CodeMirror overrides */
+.cm-editor {
+  height: 100%;
+}
+
+.cm-editor .cm-scroller {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+.cm-editor.cm-focused {
+  outline: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Thin scrollbar for sidebar */
+.thin-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Search highlight */
+.search-highlight {
+  @apply bg-yellow-300 dark:bg-yellow-600 rounded-sm px-0.5;
+}
+
+/* File tree drag indicator */
+.drag-over {
+  @apply bg-[var(--color-accent)] bg-opacity-10 rounded;
+}
+
+/* Context menu animation */
+.context-menu-enter {
+  animation: contextMenuIn 0.1s ease-out;
+}
+
+@keyframes contextMenuIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
